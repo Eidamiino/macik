@@ -1,5 +1,4 @@
 defmodule MacikWeb.PageController do
-  import :rand
   use MacikWeb, :controller
 
   def home(conn, _params) do
@@ -55,7 +54,7 @@ defmodule MacikWeb.PageController do
     |> send_resp(200, Jason.encode!(quizzes))
   end
 
-  defp generate_quizzes(amount) do
+  def generate_quizzes(amount) do
     room_states = [:running, :in_lobby, :ended]
 
     Enum.map(1..amount, fn _ ->

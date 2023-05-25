@@ -17,9 +17,12 @@ defmodule Macik.Application do
       # Start Finch
       {Finch, name: Macik.Finch},
       # Start the Endpoint (http/https)
+      Macik.Rooms,
+
       MacikWeb.Endpoint
       # Start a worker by calling: Macik.Worker.start_link(arg)
       # {Macik.Worker, arg}
+
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
