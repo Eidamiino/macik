@@ -28,28 +28,41 @@ defmodule Macik.Rooms do
   end
 
   def random_quizzes(amount) do
-    if amount < 0 do
-      []
-    else
-      generate_quiz_list(amount)
-    end
+  if amount < 0 do
+    []
+  else
+    generate_quiz_list(amount)
   end
+end
 
-  defp generate_quiz_list(amount) do
-    room_states = [:running, :in_lobby, :ended]
+defp generate_quiz_list(amount) do
+  room_states = [:running, :in_lobby, :ended]
 
-    Enum.map(1..amount, fn _ ->
-      max_player_count = :rand.uniform(20)
-      current_player_count = :rand.uniform(max_player_count)
+  Enum.map(1..amount, fn _ ->
+    max_player_count = :rand.uniform(20)
+    current_player_count = :rand.uniform(max_player_count)
 
-      room_state = Enum.random(room_states)
+    room_state = Enum.random(room_states)
+    players = generate_player_list(current_player_count)
 
-      %{
-        max_player_count: max_player_count,
-        current_player_count: current_player_count,
-        room_state: room_state,
-        created_at: DateTime.utc_now()
-      }
-    end)
-  end
+    %{
+      "maxPlayerCount" => max_player_count,
+      "currentPlayerCount" => current_player_count,
+      "roomState" => room_state,
+      "createdAt" => DateTime.utc_now(),
+      "players" => players
+    }
+  end)
+end
+
+defp generate_player_list(player_count) do
+  Enum.map(1..player_count, fn _ ->
+    %{
+      "id" => :rand.uniform(1_000_000_000),
+      "name" => "hroch",
+      "rank" => "hrosi rank",
+      "country" => "hrochov"
+    }
+  end)
+end
 end
