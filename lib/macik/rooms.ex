@@ -15,6 +15,7 @@ defmodule Macik.Rooms do
     {:noreply, updated_state}
   end
 
+  @spec start_link(any) :: :ignore | {:error, any} | {:ok, pid}
   def start_link(arg) do
     GenServer.start_link(__MODULE__, arg, name: __MODULE__)
   end

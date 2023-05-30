@@ -22,7 +22,6 @@ defmodule MacikWeb.Router do
 
     get "/api/quiz", PageController, :index
     get "/api/random/:amount", PageController, :random_quizzes
-
   end
 
   # Other scopes may use custom stacks.
