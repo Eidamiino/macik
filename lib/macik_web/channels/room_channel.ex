@@ -21,7 +21,8 @@ defmodule MacikWeb.RoomChannel do
   # broadcast to everyone in the current topic (room:lobby).
   @impl true
   def handle_in("shout", payload, socket) do
-    broadcast(socket, "shout", payload)
+    count = Macik.RoomServer.join()
+    broadcast(socket, "shout", %{count: count, message: payload})
     {:noreply, socket}
   end
 
