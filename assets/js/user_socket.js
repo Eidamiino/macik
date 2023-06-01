@@ -54,28 +54,31 @@ let socket = new Socket("/userSocket", { params: {token: window.userToken}})
 //     end
 //
 // Finally, connect to the socket:
-socket.connect()
+document.getElementById("shoutButton").addEventListener("click", () => {
+  channel.push('shout');
+  channel.push('join');
+});
 
-// Now that you are connected, you can join channels with a topic.
-// Let's assume you have a channel with a topic named `room` and the
-// subtopic is its id - in this case 42:
+document.getElementById("leaveButton").addEventListener("click", () => {
+  channel.push('leave');
+});
+
+socket.connect()
 
 let channel = socket.channel("room:lobby", {})
 channel.join()
-  .receive("ok", resp => { 
+  .receive("ok", resp => {
     console.log("Joined macik room successfully", resp)
-
-    channel.push('shout');
 
     // For every "shout" we receive, log a message:
     channel.on('shout', () => {
-      console.info("A user just shouted the lobby!");
+      console.info("A user just shouted in the lobby!");
     });
 
     channel.on('user_left', () => {
       console.info("A user left the room.");
-    }); 
-   })
+    });
+  })
   .receive("error", resp => { console.log("Unable to join macik room", resp) })
 
 export default socket
