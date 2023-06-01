@@ -9,6 +9,11 @@ defmodule Macik.RoomServer do
     GenServer.call(__MODULE__, :join)
   end
 
+  def leave do
+    GenServer.call(__MODULE__, :leave)
+  end
+
+  @spec get_count :: any
   def get_count do
     GenServer.call(__MODULE__, :get_count)
   end
@@ -19,6 +24,11 @@ defmodule Macik.RoomServer do
 
   def handle_call(:join, _from, count) do
     new_count = count + 1
+    {:reply, new_count, new_count}
+  end
+
+  def handle_call(:leave, _from, count) do
+    new_count = count - 1
     {:reply, new_count, new_count}
   end
 

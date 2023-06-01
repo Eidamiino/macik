@@ -71,6 +71,10 @@ channel.join()
     channel.on('shout', () => {
       console.info("A user just shouted the lobby!");
     });
+
+    channel.on('user_left', () => {
+      console.info("A user left the room.");
+    }); 
    })
   .receive("error", resp => { console.log("Unable to join macik room", resp) })
 

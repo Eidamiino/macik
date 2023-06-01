@@ -26,6 +26,13 @@ defmodule MacikWeb.RoomChannel do
     {:noreply, socket}
   end
 
+  @impl true
+  def handle_in("leave", payload, socket) do
+    count = Macik.RoomServer.leave()
+    broadcast(socket, "user_left", %{count: count, message: payload})
+    {:noreply, socket}
+  end
+
   # Add authorization logic here as required.
   defp authorized?(_payload) do
     true
