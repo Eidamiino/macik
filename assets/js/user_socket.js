@@ -59,7 +59,16 @@ socket.connect()
 
 let channel = socket.channel("room:lobby", {})
 channel.join()
-  .receive("ok", resp => { console.log("Joined macik room successfully", resp) })
+  .receive("ok", resp => { 
+    console.log("Joined macik room successfully", resp)
+    
+    channel.push('shout');
+
+    // For every "shout" we receive, log a message:
+    channel.on('shout', () => {
+      console.info("A user just shouted the lobby!");
+    });
+   })
   .receive("error", resp => { console.log("Unable to join macik room", resp) })
 
 export default socket
