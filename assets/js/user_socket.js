@@ -54,31 +54,50 @@ let socket = new Socket("/userSocket", { params: {token: window.userToken}})
 //     end
 //
 // Finally, connect to the socket:
-document.getElementById("shoutButton").addEventListener("click", () => {
-  channel.push('shout');
-  channel.push('join');
+// Function to handle joining a room
+function joinRoom(roomName) {
+  let channel = socket.channel(`room:${roomName}`, {});
+
+  channel.join()
+    .receive("ok", resp => {
+      console.log(`Joined ${roomName} room successfully`, resp);
+
+      // For every "shout" we receive, log a message:
+      channel.on('shout', () => {
+        console.info(`A user just shouted in ${roomName} room!`);
+      });
+
+      channel.on('user_left', () => {
+        console.info(`A user left ${roomName} room.`);
+      });
+    })
+    .receive("error", resp => {
+      console.log(`Unable to join ${roomName} room`, resp);
+    });
+
+  return channel;
+}
+
+socket.connect();
+
+// Join the first room by default
+let currentChannel = joinRoom("room1");
+
+// Add event listeners to buttons
+document.getElementById("joinButton1").addEventListener("click", () => {
+  currentChannel.leave(); // Leave the current channel
+  currentChannel = joinRoom("room1"); // Join the new room
 });
 
+document.getElementById("joinButton2").addEventListener("click", () => {
+  currentChannel.leave(); // Leave the current channel
+  currentChannel = joinRoom("room2"); // Join the new room
+});
+
+// Leave the current room when the leave button is clicked
 document.getElementById("leaveButton").addEventListener("click", () => {
-  channel.push('leave');
+  currentChannel.leave();
 });
 
-socket.connect()
+export default socket;
 
-let channel = socket.channel("room:lobby", {})
-channel.join()
-  .receive("ok", resp => {
-    console.log("Joined macik room successfully", resp)
-
-    // For every "shout" we receive, log a message:
-    channel.on('shout', () => {
-      console.info("A user just shouted in the lobby!");
-    });
-
-    channel.on('user_left', () => {
-      console.info("A user left the room.");
-    });
-  })
-  .receive("error", resp => { console.log("Unable to join macik room", resp) })
-
-export default socket

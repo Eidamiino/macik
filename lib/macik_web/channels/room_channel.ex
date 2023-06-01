@@ -2,7 +2,7 @@ defmodule MacikWeb.RoomChannel do
   use MacikWeb, :channel
 
   @impl true
-  def join("room:lobby", payload, socket) do
+  def join("room:" <> room_name, payload, socket) do
     if authorized?(payload) do
       {:ok, socket}
     else
