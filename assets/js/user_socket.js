@@ -6,7 +6,10 @@ import {Socket} from "phoenix"
 
 // And connect to the path in "lib/macik_web/endpoint.ex". We pass the
 // token for authentication. Read below how it should be used.
-let socket = new Socket("/userSocket", {params: {token: window.userToken}})
+
+//checkuju guardian token:
+let socket = new Socket("/userSocket", { params: {token: window.userToken}})
+
 
 // When you connect, you'll often need to authenticate the client.
 // For example, imagine you have an authentication plug, `MyAuth`,
@@ -61,7 +64,7 @@ let channel = socket.channel("room:lobby", {})
 channel.join()
   .receive("ok", resp => { 
     console.log("Joined macik room successfully", resp)
-    
+
     channel.push('shout');
 
     // For every "shout" we receive, log a message:
