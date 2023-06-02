@@ -60,6 +60,7 @@ function joinRoom(roomName) {
 
   channel.join()
     .receive("ok", resp => {
+      channel.push('join')    
       console.log(`Joined ${roomName} room successfully`, resp);
 
       // For every "shout" we receive, log a message:
@@ -67,7 +68,7 @@ function joinRoom(roomName) {
         console.info(`A user just shouted in ${roomName} room!`);
       });
 
-      channel.on('user_left', () => {
+      channel.on('leave', () => {
         console.info(`A user left ${roomName} room.`);
       });
     })
@@ -81,22 +82,29 @@ function joinRoom(roomName) {
 socket.connect();
 
 // Join the first room by default
-let currentChannel = joinRoom("room1");
+let currentChannel = joinRoom("lobby");
 
 // Add event listeners to buttons
 document.getElementById("joinButton1").addEventListener("click", () => {
+  currentChannel.push('leave')
   currentChannel.leave(); // Leave the current channel
+  
   currentChannel = joinRoom("room1"); // Join the new room
 });
 
 document.getElementById("joinButton2").addEventListener("click", () => {
+  currentChannel.push('leave')
   currentChannel.leave(); // Leave the current channel
+  
   currentChannel = joinRoom("room2"); // Join the new room
 });
 
 // Leave the current room when the leave button is clicked
 document.getElementById("leaveButton").addEventListener("click", () => {
+  currentChannel.push('leave')
   currentChannel.leave();
+  
+  currentChannel = joinRoom("lobby");
 });
 
 export default socket;
