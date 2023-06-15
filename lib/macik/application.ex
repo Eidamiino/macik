@@ -18,7 +18,7 @@ defmodule Macik.Application do
       {Finch, name: Macik.Finch},
       # Start the Endpoint (http/https)
       Macik.Rooms,
-      Macik.RoomServer,
+      Macik.RoomSupervisor,
 
       MacikWeb.Endpoint
       # Start a worker by calling: Macik.Worker.start_link(arg)

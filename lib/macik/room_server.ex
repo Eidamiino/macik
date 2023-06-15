@@ -1,38 +1,42 @@
 defmodule Macik.RoomServer do
   use GenServer
 
-  def start_link(_args) do
-    GenServer.start_link(__MODULE__, [], name: __MODULE__)
+  def start_link(room) do
+    GenServer.start_link(__MODULE__, room, name: room)
   end
 
-  def join do
-    GenServer.call(__MODULE__, :join)
+  def join(room) do
+    GenServer.call(room, {:join, room})
   end
 
-  def leave do
-    GenServer.call(__MODULE__, :leave)
+  def leave(room) do
+    GenServer.call(room, {:leave, room})
   end
 
-  @spec get_count :: any
-  def get_count do
-    GenServer.call(__MODULE__, :get_count)
+  def get_count(room, state) do
+    Map.get(state, room, 0)
   end
 
-  def init(_) do
-    {:ok, 0}  # 0 users at the beginning
+  defp update_count(room, count, state) do
+    Map.put(state, room, count)
   end
 
-  def handle_call(:join, _from, count) do
-    new_count = count + 1
-    {:reply, new_count, new_count}
+  def init(room) do
+    {:ok, %{room => 0}}
   end
 
-  def handle_call(:leave, _from, count) do
-    new_count = count - 1
-    {:reply, new_count, new_count}
+  def handle_call({:join, room}, _from, state) do
+    new_count = get_count(room, state) + 1
+    {:reply, new_count, update_count(room, new_count, state)}
   end
 
-  def handle_call(:get_count, _from, count) do
-    {:reply, count, count}
+  def handle_call({:leave, room}, _from, state) do
+    new_count = get_count(room, state) - 1
+    {:reply, new_count, update_count(room, new_count, state)}
+  end
+
+  def handle_call({:get_count, room}, _from, state) do
+    count = get_count(room, state)
+    {:reply, count, state}
   end
 end
