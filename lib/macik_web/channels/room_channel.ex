@@ -21,20 +21,7 @@ defmodule MacikWeb.RoomChannel do
   # broadcast to everyone in the current topic (room:lobby).
   def handle_in("join", %{"room" => room_name}, socket) do
     IO.inspect(room_name, label: "Join payload")
-
-    {room_name, pid} =
-      case DynamicSupervisor.which_children(Macik.RoomSupervisor) do
-        children ->
-          child = List.first(Enum.filter(children, fn {_, pid, _, _} -> pid != nil end))
-
-          case child do
-            {_, pid, _, _} -> {room_name, pid}
-            _ -> {room_name, Macik.RoomSupervisor.start_room(room_name)}
-          end
-
-        [] ->
-          {room_name, Macik.RoomSupervisor.start_room(room_name)}
-      end
+    {room_name, pid} = {room_name, Macik.RoomSupervisor.start_room(room_name)}
 
     count = Macik.RoomServer.join(pid)
     IO.inspect(count, label: "Join count")

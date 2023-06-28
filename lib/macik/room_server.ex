@@ -2,8 +2,9 @@ defmodule Macik.RoomServer do
   use GenServer
 
   def start_link(room) do
-    GenServer.start_link(__MODULE__, room, name: room)
-    IO.inspect(room, label: "zapinam")
+    room_atom = String.to_atom(room)
+    IO.inspect(room_atom, label: "zapinam")
+    GenServer.start_link(__MODULE__, room_atom, name: room_atom)
   end
 
   def join(room) do
