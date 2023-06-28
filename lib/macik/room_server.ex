@@ -4,10 +4,12 @@ defmodule Macik.RoomServer do
   def start_link(room) do
     room_atom = String.to_atom(room)
     IO.inspect(room_atom, label: "zapinam")
-    GenServer.start_link(__MODULE__, room_atom, name: room_atom)
+    GenServer.start_link(__MODULE__, [room_atom], name: room_atom)
   end
 
+  @spec join(atom | pid | {atom, any} | {:via, atom, any}) :: any
   def join(room) do
+    IO.inspect(room, label: "joinRoom")
     GenServer.call(room, {:join, room})
   end
 
@@ -24,6 +26,7 @@ defmodule Macik.RoomServer do
   end
 
   def init(room) do
+    IO.inspect(room, label: "inituju")
     {:ok, %{room => 0}}
   end
 
