@@ -19,23 +19,37 @@ defmodule MacikWeb.RoomChannel do
 
   # It is also common to receive messages from the client and
   # broadcast to everyone in the current topic (room:lobby).
-  @impl true
-  def handle_in("join", payload, socket) do
-  IO.inspect(payload, label: "Join payload")
-  count = Macik.RoomServer.join()
-  IO.inspect(count, label: "Join count")
-  broadcast(socket, "join", %{count: count, message: payload})
-  {:noreply, socket}
-end
+  def handle_in("join", %{"room" => room_name}, socket) do
+    IO.inspect(room_name, label: "Join payload")
+
+    {room_name, pid} =
+      case DynamicSupervisor.which_children(Macik.RoomSupervisor) do
+        children ->
+          child = List.first(Enum.filter(children, fn {_, pid, _, _} -> pid != nil end))
+
+          case child do
+            {_, pid, _, _} -> {room_name, pid}
+            _ -> {room_name, Macik.RoomSupervisor.start_room(room_name)}
+          end
+
+        [] ->
+          {room_name, Macik.RoomSupervisor.start_room(room_name)}
+      end
+
+    count = Macik.RoomServer.join(pid)
+    IO.inspect(count, label: "Join count")
+    broadcast(socket, "join", %{count: count, message: "Join successful"})
+    {:noreply, socket}
+  end
 
   @impl true
   def handle_in("leave", payload, socket) do
-  IO.inspect(payload, label: "Leave payload")
-  count = Macik.RoomServer.leave()
-  IO.inspect(count, label: "Leave count")
-  broadcast(socket, "leave", %{count: count, message: payload})
-  {:noreply, socket}
-end
+    IO.inspect(payload, label: "Leave payload")
+    count = Macik.RoomServer.leave()
+    IO.inspect(count, label: "Leave count")
+    broadcast(socket, "leave", %{count: count, message: payload})
+    {:noreply, socket}
+  end
 
   # Add authorization logic here as required.
   defp authorized?(_payload) do

@@ -3,6 +3,7 @@ defmodule Macik.RoomServer do
 
   def start_link(room) do
     GenServer.start_link(__MODULE__, room, name: room)
+    IO.inspect(room, label: "zapinam")
   end
 
   def join(room) do

@@ -6,11 +6,6 @@ import {Socket} from "phoenix"
 
 // And connect to the path in "lib/macik_web/endpoint.ex". We pass the
 // token for authentication. Read below how it should be used.
-
-//checkuju guardian token:
-let socket = new Socket("/userSocket", { params: {token: window.userToken}})
-
-
 // When you connect, you'll often need to authenticate the client.
 // For example, imagine you have an authentication plug, `MyAuth`,
 // which authenticates the session and assigns a `:current_user`.
@@ -55,12 +50,16 @@ let socket = new Socket("/userSocket", { params: {token: window.userToken}})
 //
 // Finally, connect to the socket:
 // Function to handle joining a room
+
+//checkuju guardian token:
+let socket = new Socket("/userSocket", { params: {token: window.userToken}})
+
 function joinRoom(roomName) {
   let channel = socket.channel(`room:${roomName}`, {});
 
   channel.join()
     .receive("ok", resp => {
-      channel.push('join')    
+      channel.push('join', { room: roomName})    
       console.log(`Joined ${roomName} room successfully`, resp);
 
       // For every "shout" we receive, log a message:
@@ -86,7 +85,7 @@ let currentChannel = joinRoom("lobby");
 
 // Add event listeners to buttons
 document.getElementById("joinButton1").addEventListener("click", () => {
-  currentChannel.push('leave')
+  //currentChannel.push('leave')
   currentChannel.leave(); // Leave the current channel
   
   currentChannel = joinRoom("room1"); // Join the new room
