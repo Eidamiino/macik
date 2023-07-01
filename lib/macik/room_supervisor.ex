@@ -7,6 +7,13 @@ defmodule Macik.RoomSupervisor do
   @spec start_link(any) :: :ignore | {:error, any} | {:ok, pid}
   def start_link(args) do
     DynamicSupervisor.start_link(__MODULE__, args, name: __MODULE__)
+    Agent.start_link(fn -> %{} end, name: :existing_rooms)
+  end
+
+  def add_room(room_name, pid) do
+    Agent.update(:existing_rooms, fn map -> Map.put(map, room_name, pid) end)
+    current_map = Agent.get(:existing_rooms, fn map -> map end)
+    IO.inspect(current_map, label: "Current map")
   end
 
   def start_room(room_id) do
@@ -18,7 +25,6 @@ defmodule Macik.RoomSupervisor do
   @impl true
   def init(_) do
     {:ok, pid} = DynamicSupervisor.init(strategy: :one_for_one)
-    # start_room(:macik_room)
     {:ok, pid}
   end
 end
