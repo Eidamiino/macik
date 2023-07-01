@@ -37,9 +37,13 @@ defmodule MacikWeb.RoomChannel do
 
   def handle_in("join", %{"room" => room_name}, socket) do
     IO.inspect(room_name, label: "Join payload")
-    {:ok, pid} = Macik.RoomSupervisor.start_room(room_name)
 
-    Macik.RoomSupervisor.add_room(room_name, pid)
+    pid = Macik.RoomSupervisor.room_exists?(room_name)
+    if(pid) do
+    else
+      {:ok, pid} = Macik.RoomSupervisor.start_room(room_name)
+      Macik.RoomSupervisor.add_room(room_name, pid)
+    end
 
     count = Macik.RoomServer.join(pid)
     IO.inspect(count, label: "Join count")

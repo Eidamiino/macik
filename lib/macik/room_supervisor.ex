@@ -22,6 +22,11 @@ defmodule Macik.RoomSupervisor do
     {:ok, pid}
   end
 
+  def room_exists?(room_name) do
+    existing_rooms = Agent.get(:existing_rooms, & &1)
+    Map.get(existing_rooms, room_name)
+  end
+
   @impl true
   def init(_) do
     {:ok, pid} = DynamicSupervisor.init(strategy: :one_for_one)
