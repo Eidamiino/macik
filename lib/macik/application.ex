@@ -11,7 +11,7 @@ defmodule Macik.Application do
       # Start the Telemetry supervisor
       MacikWeb.Telemetry,
       # Start the Ecto repository
-      Macik.Repo,
+      #Macik.Repo,
       # Start the PubSub system
       {Phoenix.PubSub, name: Macik.PubSub},
       # Start Finch
@@ -19,6 +19,7 @@ defmodule Macik.Application do
       # Start the Endpoint (http/https)
       Macik.Rooms,
       Macik.RoomSupervisor,
+      Macik.RoomManager,
 
       MacikWeb.Endpoint
       # Start a worker by calling: Macik.Worker.start_link(arg)

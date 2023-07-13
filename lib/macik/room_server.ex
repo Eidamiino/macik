@@ -1,8 +1,9 @@
 defmodule Macik.RoomServer do
   use GenServer
 
-  def start_link(room) do
-    room_atom = String.to_atom(room)
+  @spec start_link(binary) :: :ignore | {:error, any} | {:ok, pid}
+  def start_link(room_atom) do
+    # room_atom = String.to_atom(room)
     IO.inspect(room_atom, label: "zapinam")
     GenServer.start_link(__MODULE__, [room_atom], name: room_atom)
   end
@@ -44,4 +45,5 @@ defmodule Macik.RoomServer do
     count = get_count(room, state)
     {:reply, count, state}
   end
+
 end
