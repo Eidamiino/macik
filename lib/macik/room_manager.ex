@@ -23,7 +23,7 @@ defmodule Macik.RoomManager do
         {:reply, pid, new_map}
 
       {:ok, pid} ->
-        pid
+        {:reply, pid, state}
     end
   end
 
