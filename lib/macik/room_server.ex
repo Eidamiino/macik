@@ -15,6 +15,7 @@ defmodule Macik.RoomServer do
   end
 
   def leave(room) do
+    IO.inspect(room, label: "leaveRoom")
     GenServer.call(room, {:leave, room})
   end
 

@@ -77,31 +77,42 @@ function joinRoom(roomName) {
 
   return channel;
 }
+function leaveRoom(topic){
+  console.log("leave room called")
+  const roomName = getRoomName(currentChannel.topic);
+  currentChannel.leave(roomName)
+}
+
+function getRoomName(topic){
+  const topicArray = topic.split(":");
+  const roomName = topicArray[1];
+
+  console.log("room name:", roomName)
+  return roomName
+}
 
 socket.connect();
 
-// Join the first room by default
 let currentChannel = joinRoom("lobby");
+console.log(currentChannel)
 
-// Add event listeners to buttons
 document.getElementById("joinButton1").addEventListener("click", () => {
-  //currentChannel.push('leave')
-  currentChannel.leave(); // Leave the current channel
-  
-  currentChannel = joinRoom("room1"); // Join the new room
+  currentChannel.push('leave', { room: getRoomName(currentChannel.topic) })
+  leaveRoom(currentChannel.topic);
+
+  currentChannel = joinRoom("room1");
 });
 
 document.getElementById("joinButton2").addEventListener("click", () => {
-  currentChannel.push('leave')
-  currentChannel.leave(); // Leave the current channel
+  currentChannel.push('leave', {room: getRoomName(currentChannel.topic)})
+  leaveRoom(currentChannel.topic);
   
-  currentChannel = joinRoom("room2"); // Join the new room
+  currentChannel = joinRoom("room2"); 
 });
 
-// Leave the current room when the leave button is clicked
 document.getElementById("leaveButton").addEventListener("click", () => {
-  currentChannel.push('leave')
-  currentChannel.leave();
+  currentChannel.push('leave', { room: getRoomName(currentChannel.topic) })
+  leaveRoom(currentChannel.topic);
   
   currentChannel = joinRoom("lobby");
 });

@@ -5,15 +5,6 @@ defmodule Macik.RoomManager do
     GenServer.start_link(__MODULE__, [], name: __MODULE__)
   end
 
-  # def join(room) do
-  #   IO.inspect(room, label: "joinRoom")
-  #   GenServer.call(room, {:join, room})
-  # end
-
-  # def handle_call({:join, room}, _from, state) do
-  #   new_count = get_count(room, state) + 1
-  #   {:reply, new_count, update_count(room, new_count, state)}
-  # end
   @impl true
   def handle_call({:start, room_id}, _from, state) do
     case Map.fetch(state, room_id) do
@@ -33,7 +24,7 @@ defmodule Macik.RoomManager do
 
   @impl true
   def init(_) do
-    IO.puts("valliiiim")
+    IO.puts("manager init")
     {:ok, %{}}
   end
 end

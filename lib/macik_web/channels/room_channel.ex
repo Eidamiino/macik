@@ -38,12 +38,6 @@ defmodule MacikWeb.RoomChannel do
   def handle_in("join", %{"room" => room_name}, socket) do
     IO.inspect(room_name, label: "Join payload")
 
-    # pid = Macik.RoomSupervisor.room_exists?(room_name)
-    # if(pid) do
-    # else
-    #   {:ok, pid} = Macik.RoomSupervisor.start_room(room_name)
-    #   Macik.RoomSupervisor.add_room(room_name, pid)
-    # end
     room_name_atom=String.to_atom(room_name)
 
     pid=Macik.RoomManager.start(room_name_atom)
@@ -56,11 +50,15 @@ defmodule MacikWeb.RoomChannel do
   end
 
   @impl true
-  def handle_in("leave", payload, socket) do
-    IO.inspect(payload, label: "Leave payload")
-    count = Macik.RoomServer.leave()
+  def handle_in("leave", %{"room" => room_name}, socket) do
+    IO.inspect(room_name, label: "Leave payload")
+
+    room_name_atom=String.to_atom(room_name)
+    pid = Macik.RoomManager.start(room_name_atom)
+
+    count = Macik.RoomServer.leave(pid)
     IO.inspect(count, label: "Leave count")
-    broadcast(socket, "leave", %{count: count, message: payload})
+    broadcast(socket, "leave", %{count: count, message: "Leave successful"})
     {:noreply, socket}
   end
 
