@@ -28,7 +28,7 @@ defmodule Macik.RoomServer do
   end
 
   def init(room) do
-    IO.inspect(room, label: "inituju")
+    IO.inspect(room, label: "init room server")
     {:ok, %{room => 0}}
   end
 

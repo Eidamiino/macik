@@ -62,7 +62,6 @@ function joinRoom(roomName) {
       channel.push('join', { room: roomName})    
       console.log(`Joined ${roomName} room successfully`, resp);
 
-      // For every "shout" we receive, log a message:
       channel.on('shout', () => {
         console.info(`A user just shouted in ${roomName} room!`);
       });
@@ -78,7 +77,6 @@ function joinRoom(roomName) {
   return channel;
 }
 function leaveRoom(topic){
-  console.log("leave room called")
   const roomName = getRoomName(currentChannel.topic);
   currentChannel.leave(roomName)
 }
@@ -87,7 +85,6 @@ function getRoomName(topic){
   const topicArray = topic.split(":");
   const roomName = topicArray[1];
 
-  console.log("room name:", roomName)
   return roomName
 }
 
