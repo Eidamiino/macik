@@ -17,23 +17,6 @@ defmodule MacikWeb.RoomChannel do
     {:reply, {:ok, payload}, socket}
   end
 
-  # It is also common to receive messages from the client and
-  # broadcast to everyone in the current topic (room:lobby).
-
-  # stary check na existing
-  # {room_name, pid} =
-  #   case DynamicSupervisor.which_children(Macik.RoomSupervisor) do
-  #     children ->
-  #       child = List.first(Enum.filter(children, fn {_, pid, _, _} -> pid != nil end))
-
-  #       case child do
-  #         {_, pid, _, _} -> {room_name, pid}
-  #         _ -> {room_name, Macik.RoomSupervisor.start_room(room_name)}
-  #       end
-
-  #     [] ->
-  #       {room_name, Macik.RoomSupervisor.start_room(room_name)}
-  #   end
 
   def handle_in("join", %{"room" => room_name}, socket) do
     IO.inspect(room_name, label: "Join payload")

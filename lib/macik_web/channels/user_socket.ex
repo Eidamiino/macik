@@ -1,5 +1,6 @@
 defmodule MacikWeb.UserSocket do
   use Phoenix.Socket
+  channel "room:getRooms", MacikWeb.RoomManagerChannel
   channel "room:*", MacikWeb.RoomChannel
 
   @impl true
